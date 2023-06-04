@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Item Grabber</title>
+</head>
+
+<body>
+    <h1>Item Grabber</h1>
+
+    <form id="itemForm">
+        <label for="url">URL:</label>
+        <input type="text" id="url" required>
+
+
+
+        <br><br>
+        <button type="submit">Save</button>
+    </form>
+    <div id="results"></div>
+
+    <script>
+        document.getElementById('itemForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent form submission
+
+            const url = document.getElementById('url').value;
+
+
+            // Make a request to fetch the item data
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    console.log(doc);
+                    const imageElement = doc.querySelectorAll('img');
+                    imageElement.forEach(img => {
+                        const imageURL = img.src;
+                        console.log('Image URL:', imageURL);
+                        displayData(imageURL);
+                        // You can perform further operations with the image URL here
+                    });
+
+                    // Extract item data based on user's selection
+
+
+                    // Simulate saving the item to the user's account
+                    // console.log('Item:', item);
+                    // Implement the logic to save the item to the user's account here
+
+                    // Reset the form
+                    //   document.getElementById('itemForm').reset();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+
+        const form = document.getElementById('results');
+
+        function displayData(img) {
+            // Create an <img> element
+            const imgElement = document.createElement('img');
+            imgElement.src = img; // Set the image source
+            form.appendChild(imgElement); // Append the <img> element to the body
+
+            // // Create a <p> element
+            // const pElement = document.createElement('p');
+            // pElement.textContent = 'Lorem ipsum dolor sit amet'; // Set the text content
+            // form.appendChild(pElement); // Append the <p> element to the body
+
+            // // Create an <a> (URL) element
+            // const aElement = document.createElement('a');
+            // aElement.href = 'https://www.example.com'; // Set the URL
+            // aElement.textContent = 'Click here'; // Set the link text
+            // form.appendChild(aElement); // Append the <a> element to the body
+        }
+
+
+
+
+
+    </script>
+</body>
+
+</html>

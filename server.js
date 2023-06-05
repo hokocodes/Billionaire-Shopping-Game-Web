@@ -3,9 +3,7 @@ const axios = require('axios');
 
 const app = express();
 
-app.use(express.static('public'));
-
-app.get('/fetch-image', async (req, res) => {
+app.get('/api/fetch-image', async (req, res) => {
   const imageUrl = req.query.url;
   
   try {
@@ -19,7 +17,4 @@ app.get('/fetch-image', async (req, res) => {
   }
 });
 
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+module.exports = app;

@@ -1,34 +1,25 @@
 const express = require('express');
-const cheerio = require('cheerio');
-const request = require('request');
-const cors = require('cors');
+const axios = require('axios');
 
 const app = express();
-const port = 3000;
 
-app.use(cors());
+app.use(express.static('public'));
 
-app.get('/scrape', (req, res) => {
-  const url = req.query.url;
-
-  request(url, (error, response, html) => {
-    if (!error) {
-      const $ = cheerio.load(html);
-      const images = [];
-
-      $('img').each((index, element) => {
-        images.push($(element).attr('src'));
-      });
-
-      res.setHeader('Access-Control-Allow-Origin', '*'); // Add Access-Control-Allow-Origin header
-      res.json(images);
-    } else {
-      res.status(500).json({ error: 'Failed to scrape the page.' });
-    }
-  });
+app.get('/fetch-image', async (req, res) => {
+  const imageUrl = req.query.url;
+  
+  try {
+    const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+    const imageData = Buffer.from(response.data, 'base64');
+    res.contentType('image/jpeg');
+    res.send(imageData);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error fetching image');
+  }
 });
 
-
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
